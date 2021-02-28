@@ -2,6 +2,7 @@
 
 from datetime import datetime
 # from pyautogui import screenshot
+import re
 from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
@@ -10,12 +11,13 @@ from selenium.webdriver.support import expected_conditions
 import time
 
 SLEEP = 3
+WAIT = 30
 
 
 def check_vaccine_oregon_gov():
     driver.get("https://covidvaccine.oregon.gov/")
     check_wait_switch('chatbot-chat-frame')
-    check_wait_click_tag('svg')  # Click chatbot
+    check_wait_click_class('bubble')  # Click chatbot
     check_wait_click_class('button')  # Click "start chat"
     time.sleep(SLEEP)
     check_wait_click_class('quick-reply')  # Language? Click "English"
@@ -50,7 +52,7 @@ def check_vaccine_oregon_gov():
     driver.switch_to.window("MyHealth - Login Page")
 
     # On MyHealth Page
-    assert WebDriverWait(driver, 2).until(
+    assert WebDriverWait(driver, WAIT).until(
         expected_conditions.presence_of_element_located((By.XPATH, "//center"))
     )
 
@@ -70,7 +72,7 @@ def check_vaccine_walgreens():
 
 def check_wait_click_class(name, tries=5):
     try:
-        assert WebDriverWait(driver, 2).until(
+        assert WebDriverWait(driver, WAIT).until(
             expected_conditions.presence_of_element_located((By.CLASS_NAME, name))
         )
         button = driver.find_element_by_class_name(name)
@@ -86,9 +88,9 @@ def check_wait_click_class(name, tries=5):
         print("Could not complete chatbot interaction. Check the webpage for updates.")
 
 
-def check_wait_click_tag(name, wait=2, tries=5):
+def check_wait_click_tag(name, tries=5):
     try:
-        assert WebDriverWait(driver, wait).until(
+        assert WebDriverWait(driver, WAIT).until(
             expected_conditions.presence_of_element_located((By.TAG_NAME, name))
         )
         button = driver.find_element_by_tag_name(name)
@@ -98,23 +100,32 @@ def check_wait_click_tag(name, wait=2, tries=5):
             return
 
     except TimeoutError:
-        check_wait_click_tag(name, wait, tries - 1)
+        check_wait_click_tag(name, tries - 1)
 
     except exceptions.WebDriverException:
         print("Could not complete chatbot interaction. Check the webpage for updates.")
 
 
-def check_wait_switch(frame_name, wait=2, tries=5):
+def check_wait_switch(frame_name, tries=5):
     """Checks if a frame exists on the web page, and then switches to it if it does."""
+
+    if tries == 0:
+        raise exceptions.WebDriverException
+
+    driver.implicitly_wait(10)
+
     try:
-        assert WebDriverWait(driver, wait).until(
+        assert WebDriverWait(driver, 10).until(
             expected_conditions.presence_of_element_located((By.ID, frame_name))
         )
 
+        # Make sure the expected frame was selected
         driver.switch_to.frame(driver.find_element_by_id(frame_name))
+        expected_text = re.compile('^Hello there!.*$')
+        assert expected_text.match(driver.switch_to.active_element.text)
 
-        if tries == 0:
-            return
+    except AssertionError:
+        print("Selected frame does not match what was expected.")
 
     except TimeoutError:
         check_wait_switch(frame_name, tries - 1)
@@ -123,9 +134,9 @@ def check_wait_switch(frame_name, wait=2, tries=5):
         print("Could not complete chatbot interaction. Check the webpage for updates.")
 
 
-def check_wait_click_xpath(xpath, wait=2, tries=5):
+def check_wait_click_xpath(xpath, tries=5):
     try:
-        assert WebDriverWait(driver, wait).until(
+        assert WebDriverWait(driver, WAIT).until(
             expected_conditions.presence_of_element_located((By.XPATH, xpath))
         )
         button = driver.find_element_by_xpath(xpath)
@@ -135,7 +146,7 @@ def check_wait_click_xpath(xpath, wait=2, tries=5):
             return
 
     except TimeoutError:
-        check_wait_click_xpath(xpath, wait, tries - 1)
+        check_wait_click_xpath(xpath, tries - 1)
 
     except TypeError:
         button = driver.find_element_by_tag_name(xpath)
