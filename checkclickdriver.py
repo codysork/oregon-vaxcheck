@@ -15,6 +15,11 @@ class CheckClickDriver(webdriver.Chrome):
         super().__init__()
         self.cur_element = None
 
+    def bot_stuck_message(self):
+        print("Could not complete chatbot interaction.")
+        print("Bot got stuck at: " + self.cur_element.text)
+        print("Check the webpage for updates.")
+
     def check_wait_click_element(self, by, _str, tries=5):
         """
         Checks for an html element on a webpage specified by location strategy,
@@ -26,7 +31,7 @@ class CheckClickDriver(webdriver.Chrome):
         _str: The string that the selection strategy will use for matching the
               element.
         """
-i
+
         if tries == 0:
             raise exceptions.WebDriverException
 
@@ -52,8 +57,12 @@ i
         except TimeoutError:
             self.check_wait_click_element(_str, by, tries - 1)
 
+        except exceptions.StaleElementReferenceException:
+            self.bot_stuck_message()
+            raise SystemExit()
+
         except exceptions.WebDriverException:
-            print("Could not complete chatbot interaction. Check the webpage for updates.")
+            self.bot_stuck_message()
             raise SystemExit
 
     def check_wait_switch(self, frame_name, tries=5):
