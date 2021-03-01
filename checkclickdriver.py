@@ -15,14 +15,18 @@ class CheckClickDriver(webdriver.Chrome):
         super().__init__()
         self.cur_element = None
 
-    def check_wait_click_element(self, by, name, tries=5):
-        """Checks if an HTML on the current page has the class specified by "name",
-         and clicks the element if it does.
-         "strategy" specifies the method the web driver will use to select the element.
-         This method currently supports selecting an element by class, css selector, tag,
-         or xpath.
-         """
+    def check_wait_click_element(self, by, _str, tries=5):
+        """
+        Checks for an html element on a webpage specified by location strategy,
+        and then clicks it.
 
+        by: Takes a By object from the selenium API. Make sure to specify the
+            location strategy for selecting an element by passing By.CLASS_NAME,
+            By.CSS_SELECTOR, By.TAG, or By.XPATH
+        _str: The string that the selection strategy will use for matching the
+              element.
+        """
+i
         if tries == 0:
             raise exceptions.WebDriverException
 
@@ -30,23 +34,23 @@ class CheckClickDriver(webdriver.Chrome):
 
         try:
             assert WebDriverWait(self, 10).until(
-                expected_conditions.presence_of_element_located((by, name))
+                expected_conditions.presence_of_element_located((by, _str))
             )
 
             if by == 'class name':
-                self.cur_element = self.find_element_by_class_name(name)
+                self.cur_element = self.find_element_by_class_name(_str)
             elif by == 'css selector':
-                self.cur_element = self.find_element_by_css_selector(name)
+                self.cur_element = self.find_element_by_css_selector(_str)
             elif by == 'tag':
-                self.cur_element = self.find_element_by_tag_name(name)
+                self.cur_element = self.find_element_by_tag_name(_str)
             elif by == 'xpath':
-                self.cur_element = self.find_element_by_xpath(name)
+                self.cur_element = self.find_element_by_xpath(_str)
             else:
                 raise InvalidStrategy()
             self.cur_element.click()
 
         except TimeoutError:
-            self.check_wait_click_element(name, by, tries - 1)
+            self.check_wait_click_element(_str, by, tries - 1)
 
         except exceptions.WebDriverException:
             print("Could not complete chatbot interaction. Check the webpage for updates.")
