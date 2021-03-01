@@ -1,6 +1,7 @@
 
 import re
 from checkclickdriver import CheckClickDriver
+from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
@@ -26,33 +27,33 @@ class SiteCheckDriver(CheckClickDriver):
         self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Click "Vaccine Eligibility"
         self. check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Check eligibility? Click "Yes"
         # TODO: Remove hard-coding for under 70, and change age through web app
-        self. check_wait_click_element(By.XPATH, "//div[@class='quick-replies-response']/div[2]")  # Over 70? Click "No"
+        # Over 70? Click "No"
+        self. check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
         self. check_wait_click_element(By.CLASS_NAME, 'tpl-response-buttons-button-text')
         self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # In the listed counties? Click "Yes"
         self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Get shot at convention center? Click "Yes"
         # Allergic reaction? Click "No"
-        self.check_wait_click_element(By.XPATH, "//div[@class='quick-replies-response']/div[2]")
+        self.check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
         # Received any doses? Click "No"
-        self.check_wait_click_element(By.XPATH, "//div[@class='quick-replies-response']/div[3]")
+        self.check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[3]')
         # Tested positive? Click "No"
-        self.check_wait_click_element(By.XPATH, "//div[@class='quick-replies-response']/div[2]")
+        self.check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
         # Vaccine in last 14 days? Click "No"
-        self.check_wait_click_element(By.XPATH, "//div[@class='quick-replies-response']/div[2]")
+        self.check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
         # Close contact? Click "No"
-        self.check_wait_click_element(By.XPATH, "//div[@class='quick-replies-response']/div[2]")
+        self.check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
 
         # Check for an error message
-        assert WebDriverWait(self, 10).until(
-            expected_conditions.presence_of_element_located(
-                (By.CSS_SELECTOR, "div.conversation > div:nth-of-type(51) > div > div > div:nth-of-type(4)"))
-        )
+        try:
+            check_element = self.find_element_by_css_selector(
+                'div.conversation > div:nth-of-type(51) > div > div > div:nth-of-type(4)'
+            )
 
-        check_element = self.find_element_by_css_selector(
-            "div.conversation > div:nth-of-type(51) > div > div > div:nth-of-type(4)"
-        )
+            if re.match('^.*errror.*$', check_element.text):
+                self.bot_stuck_message()
 
-        if re.match('^.*errror.*$', check_element.text):
-            self.bot_stuck_message()
+        except exceptions.NoSuchElementException:
+            print("The expected element is not available on the web page. Check for updates.")
 
         # Click "schedule appointment"
         self.check_wait_click_element(By.CSS_SELECTOR, "div.card-response-wrapper > div > div.tpl-response-buttons")

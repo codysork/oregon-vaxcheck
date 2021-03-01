@@ -57,6 +57,9 @@ class CheckClickDriver(webdriver.Chrome):
         except TimeoutError:
             self.check_wait_click_element(_str, by, tries - 1)
 
+        except exceptions.NoSuchElementException:
+            print("The expected element is not available on the web page. Check for updates.")
+
         except exceptions.StaleElementReferenceException:
             self.bot_stuck_message()
             raise SystemExit()
