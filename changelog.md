@@ -7,9 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
-- Bot can navigate most the way through the chatbot at covidvaccine.oregon.gov
-- Error handling when interacting with the chatbot
-- Created custom webdriver classes
+- Bot can complete the chat questionnaire and check if covid-19 vaccines are available
 
 ### Changed
 

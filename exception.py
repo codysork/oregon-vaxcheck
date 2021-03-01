@@ -1,0 +1,2 @@
+class InvalidStrategy(Exception):
+    pass
