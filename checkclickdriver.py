@@ -33,7 +33,6 @@ class CheckClickDriver(webdriver.Chrome):
                 expected_conditions.presence_of_element_located((by, name))
             )
 
-            self.cur_element = None
             if by == 'class name':
                 self.cur_element = self.find_element_by_class_name(name)
             elif by == 'css selector':
