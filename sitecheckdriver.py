@@ -1,4 +1,4 @@
-
+import counties
 import re
 from checkclickdriver import CheckClickDriver
 from selenium.common import exceptions
@@ -7,10 +7,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from time import sleep
 
+COUNTY = "Washington"
 SLEEP = 2
 
 
 class SiteCheckDriver(CheckClickDriver):
+
+    def match_counties_element(self, counties_to_search, by, _str) -> bool:
+
+        found = False
+        for county in counties_to_search:
+            found = self.match_str_in_element(by, _str, county['County'])
+        return found
 
     def check_vaccine_oregon_gov(self, tries=5):
 
@@ -30,7 +38,18 @@ class SiteCheckDriver(CheckClickDriver):
         # Over 70? Click "No"
         self. check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
         self. check_wait_click_element(By.CLASS_NAME, 'tpl-response-buttons-button-text')
-        self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # In the listed counties? Click "Yes"
+
+        # Check County
+        correct_county = self.match_counties_element(
+            counties.counties_data, By.CSS_SELECTOR, 'div.conversation > div:nth-of-type(23)')
+        if correct_county:
+            self. check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[1]')
+        else:
+            self. check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
+
+        # TODO: Handle "get vaccinated Oregon"
+
+        self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Make sure we are in correct county
         self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Get shot at convention center? Click "Yes"
         # Allergic reaction? Click "No"
         self.check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
@@ -69,13 +88,18 @@ class SiteCheckDriver(CheckClickDriver):
                 break
 
         # On MyHealth Page
+        # TODO: Make sure a center tag actually exists
+        # TODO: Confirm the location where vaccines are available
+        # TODO: Screenshot or capture text of availability
         assert WebDriverWait(self, 10).until(
            expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "center"))
         )
-
         cur = self.find_element_by_css_selector("center")
+
         message = re.sub(r'^All4Oregon.*\n/gi', '', cur.text)
         print(message)
+
+        # TODO: Close page
 
     def check_vaccine_walgreens(self):
         self.get("https://www.walgreens.com/findcare/vaccination/covid-19/location-screening")

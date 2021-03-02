@@ -1,4 +1,5 @@
 from exception import InvalidStrategy
+import re
 from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
@@ -19,6 +20,15 @@ class CheckClickDriver(webdriver.Chrome):
         print("Could not complete chatbot interaction.")
         print("Bot got stuck at: " + self.cur_element.text)
         print("Check the webpage for updates.")
+
+    def match_str_in_element(self, by, elem_str, str_to_find) -> bool:
+
+        self.select_element(by, elem_str)  # self.cur_element is changed
+        found = False
+        if re.match(r'^.*' + str_to_find + '.*$', elem_str):
+            found = True
+        return found
+
 
     def check_wait_click_element(self, by, _str, tries=5):
         """
@@ -42,16 +52,7 @@ class CheckClickDriver(webdriver.Chrome):
                 expected_conditions.presence_of_element_located((by, _str))
             )
 
-            if by == 'class name':
-                self.cur_element = self.find_element_by_class_name(_str)
-            elif by == 'css selector':
-                self.cur_element = self.find_element_by_css_selector(_str)
-            elif by == 'tag':
-                self.cur_element = self.find_element_by_tag_name(_str)
-            elif by == 'xpath':
-                self.cur_element = self.find_element_by_xpath(_str)
-            else:
-                raise InvalidStrategy()
+            self.select_element(by, _str)
             self.cur_element.click()
 
         except TimeoutError:
@@ -90,3 +91,20 @@ class CheckClickDriver(webdriver.Chrome):
         except exceptions.WebDriverException:
             print("Could not complete chatbot interaction. Check the webpage for updates.")
             raise SystemExit
+
+    def select_element(self, by, _str):
+
+        try:
+            if by == 'class name':
+                self.cur_element = self.find_element_by_class_name(_str)
+            elif by == 'css selector':
+                self.cur_element = self.find_element_by_css_selector(_str)
+            elif by == 'tag':
+                self.cur_element = self.find_element_by_tag_name(_str)
+            elif by == 'xpath':
+                self.cur_element = self.find_element_by_xpath(_str)
+            else:
+                raise InvalidStrategy()
+
+        except InvalidStrategy:
+            print("You did not use a proper strategy for selecting an HTML element.")
