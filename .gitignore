@@ -1,3 +1,4 @@
 .idea
 logs/geckodriver.log
+.pytest_cache
 venv/
