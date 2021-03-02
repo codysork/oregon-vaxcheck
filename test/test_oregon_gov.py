@@ -1,4 +1,4 @@
-from ..bot.counties import counties_data
+from bot.counties import counties_data
 
 
 class TestOregonGov:
