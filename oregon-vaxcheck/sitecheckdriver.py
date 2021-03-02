@@ -1,6 +1,6 @@
 import counties
 import re
-from checkclickdriver import CheckClickDriver
+from macrowebdriver import MacroWebDriver
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,7 +11,7 @@ COUNTY = "Washington"
 SLEEP = 2
 
 
-class SiteCheckDriver(CheckClickDriver):
+class SiteCheckDriver(MacroWebDriver):
 
     def match_counties_element(self, counties_to_search, by, _str) -> bool:
 

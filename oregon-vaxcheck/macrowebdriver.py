@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 
 
-class CheckClickDriver(webdriver.Chrome):
+class MacroWebDriver(webdriver.Chrome):
     """A custom version of Selenium's webdriver that includes functions that both check for
     and click elements. """
 
