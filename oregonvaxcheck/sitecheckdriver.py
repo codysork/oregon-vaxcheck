@@ -5,10 +5,8 @@ from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
-from time import sleep
 
 COUNTY = "Washington"
-SLEEP = 2
 
 
 class SiteCheckDriver(MacroWebDriver):
@@ -27,9 +25,10 @@ class SiteCheckDriver(MacroWebDriver):
             print("Check for bugs in your code, and check the site for updates or errors.")
 
         self.get("https://covidvaccine.oregon.gov/")
+        # Switch to chatbot ifram
         self.check_wait_switch('chatbot-chat-frame')
+        # Click the chatbot bubble
         self.check_wait_click_element(By.CLASS_NAME, 'bubble')  # Click chatbot
-        sleep(SLEEP)
         self.check_wait_click_element(By.CLASS_NAME, 'button')  # Click "start chat"
         self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Language? Click "English"
         self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Click "Vaccine Eligibility"
