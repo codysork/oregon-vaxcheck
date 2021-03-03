@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-
-from sitecheckdriver import SiteCheckDriver
+from oregonvaxcheck.sitecheckdriver import SiteCheckDriver
 
 # TODO: Add tests for buttons
 if __name__ == '__main__':
