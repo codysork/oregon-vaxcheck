@@ -1,6 +1,6 @@
-import counties
 import re
-from macrowebdriver import MacroWebDriver
+from oregonvaxcheck.counties import counties_data
+from oregonvaxcheck.macrowebdriver import MacroWebDriver
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -41,7 +41,7 @@ class SiteCheckDriver(MacroWebDriver):
 
         # Check County
         correct_county = self.match_counties_element(
-            counties.counties_data, By.CSS_SELECTOR, 'div.conversation > div:nth-of-type(23)')
+            counties_data, By.CSS_SELECTOR, 'div.conversation > div:nth-of-type(23)')
         if correct_county:
             self. check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[1]')
         else:

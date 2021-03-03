@@ -1,4 +1,4 @@
-from exception import InvalidStrategy
+from oregonvaxcheck.exception import InvalidStrategy
 import re
 from selenium import webdriver
 from selenium.common import exceptions
