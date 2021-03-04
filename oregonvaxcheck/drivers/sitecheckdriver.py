@@ -22,6 +22,12 @@ class SiteCheckDriver(MacroWebDriver):
         return found
 
     def check_vaccine_oregon_gov(self, csv_file=None, tries=5):
+        """
+        Check covidvaccine.oregon.gov for available vaccines and information updates.
+
+        csv_file: optional argument for a csv file for writing the chatbot tree, and
+        for comparing with the chatbot tree, to alert the user about updates.
+        """
 
         chatbot_tree = ChatTree()
 
