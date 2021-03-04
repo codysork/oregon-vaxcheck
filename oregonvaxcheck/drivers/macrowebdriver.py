@@ -1,4 +1,4 @@
-from oregonvaxcheck.common.exception import InvalidStrategy
+from oregonvaxcheck.common.exceptions import InvalidStrategy
 import re
 from selenium import webdriver
 from selenium.common import exceptions
@@ -28,7 +28,6 @@ class MacroWebDriver(webdriver.Chrome):
         if re.match(r'^.*' + str_to_find + '.*$', elem_str):
             found = True
         return found
-
 
     def check_wait_click_element(self, by, _str, tries=5):
         """
