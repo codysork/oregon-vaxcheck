@@ -21,7 +21,7 @@ class SiteCheckDriver(MacroWebDriver):
             found = self.match_str_in_element(by, _str, county['County'])
         return found
 
-    def check_vaccine_oregon_gov(self, tries=5):
+    def check_vaccine_oregon_gov(self, csv_file=None, tries=5):
 
         chatbot_tree = ChatTree()
 
@@ -32,7 +32,7 @@ class SiteCheckDriver(MacroWebDriver):
         self.get("https://covidvaccine.oregon.gov/")
         # Switch to chatbot iframe
         self.check_wait_switch('chatbot-chat-frame')                     # Click the chatbot bubble
-        self.check_wait_click_element(By.CLASS_NAME, 'bubble')           # Click chatbot
+        self.check_wait_click_element(By.CLASS_NAME, 'bubble', csv_file)           # Click chatbot
         sleep(SLEEP)
         self.check_wait_click_element(By.CLASS_NAME, 'bubble')           # Click "Start chat"
         for i in range(3):                                               # Set language as "English". Check vaccine

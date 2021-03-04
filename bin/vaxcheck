@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 from oregonvaxcheck.drivers.sitecheckdriver import SiteCheckDriver
+from oregonvaxcheck.data.csvreadwrite import CSVWriter
 
 # TODO: Add tests for buttons
 if __name__ == '__main__':
     my_driver = SiteCheckDriver()
+    csv_writer = CSVWriter('ddchatbot_tree.csv')  # TODO: Add csv_file as command-line argument
     my_driver.check_vaccine_oregon_gov()
     # my_driver.check_vaccine_walgreens()

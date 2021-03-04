@@ -29,7 +29,7 @@ class MacroWebDriver(webdriver.Chrome):
             found = True
         return found
 
-    def check_wait_click_element(self, by, _str, tries=5):
+    def check_wait_click_element(self, by, _str, csv_file=None, tries=5):
         """
         Checks for an html element on a webpage specified by location strategy,
         and then clicks it.
@@ -52,6 +52,10 @@ class MacroWebDriver(webdriver.Chrome):
             )
 
             self.select_element(by, _str)
+
+            if csv_file:
+                csv_file
+
             self.cur_element.click()
 
         except TimeoutError:
