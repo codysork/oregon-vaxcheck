@@ -1,12 +1,16 @@
 import re
+import records
 from oregonvaxcheck.counties import counties_data
+from oregonvaxcheck.datatypes.tree import ChatTree
 from oregonvaxcheck.macrowebdriver import MacroWebDriver
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+from time import sleep
 
 COUNTY = "Washington"
+SLEEP = 2
 
 
 class SiteCheckDriver(MacroWebDriver):
@@ -20,20 +24,22 @@ class SiteCheckDriver(MacroWebDriver):
 
     def check_vaccine_oregon_gov(self, tries=5):
 
+        chatbot_tree = Tree()
+
         if tries == 0:
             print("Bot could not check for vaccines at https://covidvaccine.oregon.gov")
             print("Check for bugs in your code, and check the site for updates or errors.")
 
         self.get("https://covidvaccine.oregon.gov/")
-        # Switch to chatbot ifram
-        self.check_wait_switch('chatbot-chat-frame')
-        # Click the chatbot bubble
-        self.check_wait_click_element(By.CLASS_NAME, 'bubble')  # Click chatbot
-        self.check_wait_click_element(By.CLASS_NAME, 'button')  # Click "start chat"
-        self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Language? Click "English"
-        self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Click "Vaccine Eligibility"
-        self. check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # Check eligibility? Click "Yes"
+        # Switch to chatbot iframe
+        self.check_wait_switch('chatbot-chat-frame')                     # Click the chatbot bubble
+        self.check_wait_click_element(By.CLASS_NAME, 'bubble')           # Click chatbot
+        sleep(SLEEP)
+        self.check_wait_click_element(By.CLASS_NAME, 'bubble')           # Click "Start chat"
+        for i in range(3):                                               # Set language as "English". Check vaccine
+            self.check_wait_click_element(By.CLASS_NAME, 'quick-reply')  # eligibility.
         # TODO: Remove hard-coding for under 70, and change age through web app
+
         # Over 70? Click "No"
         self. check_wait_click_element(By.XPATH, '//div[@class=\'quick-replies-response\']/div[2]')
         self. check_wait_click_element(By.CLASS_NAME, 'tpl-response-buttons-button-text')
