@@ -1,11 +1,8 @@
-from oregonvaxcheck.counties import counties_data
-from oregonvaxcheck.sitecheckdriver import SiteCheckDriver
+from oregonvaxcheck.data.counties import counties_data
+from oregonvaxcheck.drivers.sitecheckdriver import SiteCheckDriver
 
 
 class TestOregonGov:
-
-    def __init__(self):
-        self.test_driver = SiteCheckDriver()
 
     def test_county_data(self):
         test_county = counties_data[0]['County']

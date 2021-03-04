@@ -1,8 +1,7 @@
 import re
-import records
-from oregonvaxcheck.counties import counties_data
+from oregonvaxcheck.data.counties import counties_data
 from oregonvaxcheck.datatypes.tree import ChatTree
-from oregonvaxcheck.macrowebdriver import MacroWebDriver
+from oregonvaxcheck.drivers.macrowebdriver import MacroWebDriver
 from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
