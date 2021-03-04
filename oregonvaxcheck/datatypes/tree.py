@@ -5,8 +5,8 @@ class ChatTree:
         self.prompt_response = None
         self.data = None  # What data this tree node contains
         # A chat response will typically have at least 2 responses
-        self.branch1 = ChatTree(level=level+1)
-        self.branch2 = ChatTree(level=level+1)
+        self.branch1 = None  # Set to ChatTree type
+        self.branch2 = None  # Set to ChatTree type
         # Some questions will have 3 responses
         self.branch3 = None
 

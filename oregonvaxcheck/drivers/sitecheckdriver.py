@@ -23,7 +23,7 @@ class SiteCheckDriver(MacroWebDriver):
 
     def check_vaccine_oregon_gov(self, tries=5):
 
-        chatbot_tree = Tree()
+        chatbot_tree = ChatTree()
 
         if tries == 0:
             print("Bot could not check for vaccines at https://covidvaccine.oregon.gov")
