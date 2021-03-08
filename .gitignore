@@ -4,4 +4,5 @@ logs/geckodriver.log
 oregon_vaxcheck.egg-info
 build/
 dist/
+private/
 venv/
